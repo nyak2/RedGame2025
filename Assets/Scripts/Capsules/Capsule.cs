@@ -8,6 +8,8 @@ public class Capsule : MonoBehaviour
     // Components.
     private SpriteRenderer _spriteRenderer;
 
+    public bool _isLanded;
+
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -21,11 +23,29 @@ public class Capsule : MonoBehaviour
         _spriteRenderer.sprite = GetSprite(_tier);
         float newScale = GetScale(_tier);
         transform.localScale = new(newScale, newScale, 1.0f);
+        _isLanded = false;
+        tag = "Untagged";
+    }
+
+    public Tier GetTier()
+    {
+        return _tier;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if(collision.gameObject.CompareTag("Ground") || collision.gameObject.TryGetComponent<Capsule>(out var capsule))
+        {
+            _isLanded = true;
+        }
+
         if (!collision.gameObject.TryGetComponent<Capsule>(out var otherCapsule))
+        {
+            return;
+        }
+
+
+        if(!_isLanded)
         {
             return;
         }
