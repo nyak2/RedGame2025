@@ -64,7 +64,6 @@ public class Capsule : MonoBehaviour
     private void Merge(Capsule thisCapsule, Capsule otherCapsule, Vector2 contactPoint)
     {
         Tier nextTier = NextTier(thisCapsule._tier);
-        Debug.Log(nextTier);
         if (nextTier == Tier.Max)
         {
             return;
