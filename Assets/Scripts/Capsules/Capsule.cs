@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using static CapsuleTier;
 
 public class Capsule : MonoBehaviour
 {
@@ -10,19 +11,6 @@ public class Capsule : MonoBehaviour
         Biggie,
         Ogu
     }*/
-
-    public enum Tier
-    { 
-        One,
-        Two,
-        Three,
-        Four,
-        Five,
-        Six,
-        Seven,
-        Eight,
-        Max
-    }
 
     private Tier _tier;
 
@@ -41,8 +29,8 @@ public class Capsule : MonoBehaviour
     {
         _tier = tier;
 
-        _spriteRenderer.sprite = CapsuleSpriteBank.GetSprite($"{ _tier }");
-        float newScale = CapsuleScaleBank.GetScale(_tier);
+        _spriteRenderer.sprite = GetSprite(_tier);
+        float newScale = GetScale(_tier);
         transform.localScale = new(newScale, newScale, 1.0f);
     }
 

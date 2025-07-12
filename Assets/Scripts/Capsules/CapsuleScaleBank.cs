@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static Capsule;
+using static CapsuleTier;
 
 public class CapsuleScaleBank : MonoBehaviour
 {
