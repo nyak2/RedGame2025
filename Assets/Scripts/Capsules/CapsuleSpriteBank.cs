@@ -8,7 +8,7 @@ public class CapsuleSpriteBank : MonoBehaviour
 
     private void Awake()
     {
-        Sprite[] capsuleSprites = Resources.LoadAll<Sprite>("Sprites/Capsules");
+        Sprite[] capsuleSprites = Resources.LoadAll<Sprite>("Sprites/Capsules/Capsules_v1");
         _spriteDict = capsuleSprites.ToDictionary(sprite => sprite.name, sprite => sprite);
     }
 
