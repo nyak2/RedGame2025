@@ -1,10 +1,11 @@
-using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ChargeKeeper : MonoBehaviour
 {
     private static float _charge = 0.0f;
-    [SerializeField] private TextMeshProUGUI _chargeTextMesh;
+    private static readonly float _maxCharge = 100.0f;
+    [SerializeField] private Slider _chargeSlider;
     public static ChargeKeeper Instance;
 
     private void Awake()
@@ -17,10 +18,19 @@ public class ChargeKeeper : MonoBehaviour
     {
         _charge += charge;
         UpdateChargeUi();
+        if (_charge >= _maxCharge)
+        {
+            
+        }
     }
 
     private void UpdateChargeUi()
     {
-        _chargeTextMesh.text = _charge.ToString();
+        _chargeSlider.value = ToValue(_charge);
+    }
+
+    private float ToValue(float charge)
+    {
+        return charge / _maxCharge;
     }
 }
