@@ -1,20 +1,9 @@
-using System;
 using UnityEngine;
 using static CapsuleTier;
 
 public class Capsule : MonoBehaviour
 {
-    /*private enum BudType
-    {
-        Tappy,
-        Bam,
-        Biggie,
-        Ogu
-    }*/
-
     private Tier _tier;
-
-    private readonly static string[] _tiersAsString = Enum.GetNames(typeof(Tier));
 
     // Components.
     private SpriteRenderer _spriteRenderer;
@@ -45,7 +34,10 @@ public class Capsule : MonoBehaviour
         bool isSameCapsuleType = Equals(otherCapsule);
         if (isSameCapsuleType)
         {
+            float charge = GetCharge(_tier);
+            int score = GetScore(_tier);
             Merge(this, otherCapsule, firstContact.point);
+            DistributeParams(charge, score);
         }
     }
 
@@ -62,16 +54,10 @@ public class Capsule : MonoBehaviour
         transform.position = contactPoint;
     }
 
-    private Tier NextTier(Tier tier)
+    private void DistributeParams(float charge, int score)
     {
-        int tierIndex = Array.IndexOf(_tiersAsString, tier.ToString());
-        int nextIndex = tierIndex + 1;
-        if (nextIndex >= _tiersAsString.Length)
-        {
-            return tier;
-        }
-
-        return (Tier) Enum.Parse(typeof(Tier), _tiersAsString[nextIndex]);
+        ChargeKeeper.Instance.AddCharge(charge);
+        ScoreKeeper.Instance.AddScore(score);
     }
 
     public bool Equals(Capsule other)
