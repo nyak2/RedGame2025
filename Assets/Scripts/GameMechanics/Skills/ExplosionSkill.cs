@@ -22,8 +22,7 @@ public class ExplosionSkill : MonoBehaviour, ISkill
         foreach (Capsule capsule in randomCapsules)
         {
             _sfxPlayer.PlaySfx(SFXLibrary.SFX_EXPLOSION_POP);
-            CapsulePooler.Remove(capsule);
-            Destroy(capsule.gameObject);
+            capsule.Delete();
         }
     }
 }

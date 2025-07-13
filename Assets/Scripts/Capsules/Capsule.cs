@@ -7,6 +7,7 @@ public class Capsule : MonoBehaviour
 
     // Components.
     private SpriteRenderer _spriteRenderer;
+    [SerializeField] private PoofAnimation _poof;
 
     [HideInInspector] public bool _isLanded;
     private SFXPlayer _sfxPlayer;
@@ -82,9 +83,9 @@ public class Capsule : MonoBehaviour
         }
 
         _sfxPlayer.PlaySfx(SFXLibrary.SFX_CAPSULES_MERGE);
+        otherCapsule.Delete();
+        SpawnPoof();
         Initialize(nextTier);
-        CapsulePooler.Remove(otherCapsule);
-        Destroy(otherCapsule.gameObject);
         transform.position = contactPoint;
     }
 
@@ -92,6 +93,18 @@ public class Capsule : MonoBehaviour
     {
         ChargeKeeper.Instance.AddCharge(charge);
         ScoreKeeper.Instance.AddScore(score);
+    }
+
+    private void SpawnPoof()
+    {
+        Instantiate(_poof, transform.position, Quaternion.identity);
+    }
+
+    public void Delete()
+    {
+        SpawnPoof();
+        gameObject.SetActive(false);
+        CapsulePooler.Remove(this);
     }
 
     public bool Equals(Capsule other)
