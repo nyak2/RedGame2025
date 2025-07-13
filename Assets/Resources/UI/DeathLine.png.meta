@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4684da7991c734a4c9ed82c63f0c9ebf
+guid: 651aef8df308afe48883165972af404a
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -43,7 +43,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -71,7 +71,7 @@ TextureImporter:
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     resizeAlgorithm: 0
-    textureFormat: 4
+    textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
@@ -134,112 +134,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: Biggie_ChargeIcon_0
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 115
-        width: 245
-        height: 248
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 50872463a7ef88d4ab99897b93249feb
-      internalID: -596782024
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Biggie_ChargeIcon_1
-      rect:
-        serializedVersion: 2
-        x: 390
-        y: 115
-        width: 257
-        height: 248
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 06075e7ea80262a40a4f96b04524cbe0
-      internalID: -721401202
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Biggie_ChargeIcon_2
-      rect:
-        serializedVersion: 2
-        x: 750
-        y: 116
-        width: 266
-        height: 262
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c87aff705be922d4eb73b861d33e2b61
-      internalID: 2116722450
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Biggie_ChargeIcon_3
-      rect:
-        serializedVersion: 2
-        x: 1117
-        y: 104
-        width: 230
-        height: 243
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 937725195b45e6140b934fab301da794
-      internalID: -1883096400
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Biggie_ChargeIcon_4
-      rect:
-        serializedVersion: 2
-        x: 1452
-        y: 31
-        width: 379
-        height: 387
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 8bc03bba42958c14c8a083bde0657052
-      internalID: 890583391
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     physicsShape: []
     bones: []
@@ -250,12 +145,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      Biggie_ChargeIcon_0: -596782024
-      Biggie_ChargeIcon_1: -721401202
-      Biggie_ChargeIcon_2: 2116722450
-      Biggie_ChargeIcon_3: -1883096400
-      Biggie_ChargeIcon_4: 890583391
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

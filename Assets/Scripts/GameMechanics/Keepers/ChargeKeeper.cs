@@ -24,9 +24,10 @@ public class ChargeKeeper : MonoBehaviour
         _increasingChargeLevelsToSprites = new()
         {
             new(0.0f, biggieChargeIcons["Biggie_ChargeIcon_0"]),
-            new(30.0f, biggieChargeIcons["Biggie_ChargeIcon_1"]),
-            new(60.0f, biggieChargeIcons["Biggie_ChargeIcon_2"]),
-            new(90.0f, biggieChargeIcons["Biggie_ChargeIcon_3"])
+            new(25.0f, biggieChargeIcons["Biggie_ChargeIcon_1"]),
+            new(50.0f, biggieChargeIcons["Biggie_ChargeIcon_2"]),
+            new(75.0f, biggieChargeIcons["Biggie_ChargeIcon_3"]),
+            new(100.0f, biggieChargeIcons["Biggie_ChargeIcon_4"]),
         };
 
         UpdateChargeUi();
@@ -35,12 +36,13 @@ public class ChargeKeeper : MonoBehaviour
     public void AddCharge(float charge)
     {
         _charge += charge;
+        UpdateChargeUi();
+
         if (_charge >= _maxCharge)
         {
             _skillTrigger.TriggerRandomSkill();
             _charge = 0.0f;
         }
-        UpdateChargeUi();
     }
 
     private void UpdateChargeUi()
