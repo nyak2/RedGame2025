@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using static CapsuleTier;
 
@@ -7,6 +8,7 @@ public class Capsule : MonoBehaviour
 
     // Components.
     private SpriteRenderer _spriteRenderer;
+    [SerializeField] private PoofAnimation _poof;
 
     [HideInInspector] public bool _isLanded;
     private SFXPlayer _sfxPlayer;
@@ -37,24 +39,15 @@ public class Capsule : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        bool isOtherCollisionCapsule = collision.gameObject.TryGetComponent<Capsule>(out var otherCapsule);
-        if (collision.gameObject.CompareTag("Ground") || (isOtherCollisionCapsule && !_isLanded))
-        {
-            _isLanded = true;
-        }
-
-        ContactPoint2D firstContact = collision.GetContact(0);
-        bool isSameCapsuleType = Equals(otherCapsule);
-        if (isSameCapsuleType)
-        {
-            float charge = GetCharge(_tier);
-            int score = GetScore(_tier);
-            Merge(this, otherCapsule, firstContact.point);
-            DistributeParams(charge, score);
-        }
+        OnCapsuleCollide(collision);
     }
 
     private void OnCollisionStay2D(Collision2D collision)
+    {
+        OnCapsuleCollide(collision);
+    }
+
+    private void OnCapsuleCollide(Collision2D collision)
     {
         bool isOtherCollisionCapsule = collision.gameObject.TryGetComponent<Capsule>(out var otherCapsule);
         if (collision.gameObject.CompareTag("Ground") || (isOtherCollisionCapsule && !_isLanded))
@@ -82,9 +75,9 @@ public class Capsule : MonoBehaviour
         }
 
         _sfxPlayer.PlaySfx(SFXLibrary.SFX_CAPSULES_MERGE);
+        otherCapsule.Delete();
+        SpawnPoof();
         Initialize(nextTier);
-        CapsulePooler.Remove(otherCapsule);
-        Destroy(otherCapsule.gameObject);
         transform.position = contactPoint;
     }
 
@@ -92,6 +85,29 @@ public class Capsule : MonoBehaviour
     {
         ChargeKeeper.Instance.AddCharge(charge);
         ScoreKeeper.Instance.AddScore(score);
+    }
+
+    private void SpawnPoof()
+    {
+        Instantiate(_poof, transform.position, Quaternion.identity);
+    }
+
+    public void Delete()
+    {
+        SpawnPoof();
+        Disable();
+    }
+
+    private void Disable()
+    {
+        CapsulePooler.Remove(this);
+        StartCoroutine(DelayedDestroy());
+    }
+
+    private IEnumerator DelayedDestroy()
+    {
+        yield return new WaitForEndOfFrame();
+        Destroy(gameObject);
     }
 
     public bool Equals(Capsule other)

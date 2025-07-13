@@ -128,6 +128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e31d4b5af2a490488f20f774816aeaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _poof: {fileID: 8424625738413788585, guid: 735a950d6a4885248a9ec13efcbb9f4c, type: 3}
   _isLanded: 0
 --- !u!70 &4824648636188180176
 CapsuleCollider2D:

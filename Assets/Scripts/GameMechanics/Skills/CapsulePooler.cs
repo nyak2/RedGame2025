@@ -17,17 +17,19 @@ public class CapsulePooler : MonoBehaviour
 
     public static List<Capsule> GetRandom(int count)
     {
+        List<Capsule> validCapsules = _capsules.FindAll(capsule => capsule._isLanded);
         List<Capsule> resultCapsules = new();
-        if (_capsules.Count == 0)
+
+        if (validCapsules.Count == 0)
         {
             return resultCapsules;
         }
 
-        int clampedCount = Mathf.Clamp(count, 0, _capsules.Count);
+        int clampedCount = Mathf.Clamp(count, 0, validCapsules.Count);
         for (int i = 0; i < clampedCount; i++)
         {
-            int randIdx = Random.Range(0, _capsules.Count);
-            resultCapsules.Add(_capsules[randIdx]);
+            int randIdx = Random.Range(0, validCapsules.Count);
+            resultCapsules.Add(validCapsules[randIdx]);
         }
         return resultCapsules;
     }

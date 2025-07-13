@@ -12,22 +12,25 @@ public class GameManager : MonoBehaviour
     public delegate void OnLose();
     public event OnLose OnLoseEvent;
 
+    private PlayerData _loadedPlayerData;
+
     private void Awake()
     {
         _sfxPlayer = GetComponent<SFXPlayer>();
+        _loadedPlayerData = DataSaver.Load();
     }
 
     // Start is called before the first frame update
     void Start()
     {
         OnDroppedEvent += SpawnNewCapsule;
-        OnLoseEvent += ShowGameOverScreen;
+        OnLoseEvent += GameOver;
     }
 
     private void OnDestroy()
     {
         OnDroppedEvent -= SpawnNewCapsule;
-        OnLoseEvent -= ShowGameOverScreen;
+        OnLoseEvent -= GameOver;
     }
 
     void SpawnNewCapsule()
@@ -40,14 +43,32 @@ public class GameManager : MonoBehaviour
         OnDroppedEvent?.Invoke();
     }
 
-    public void ShowGameOverScreen()
+    public void GameOver()
+    {
+        CanControlControllers(false);
+
+        int totalScore = ScoreKeeper.GetScore();
+        int newHighScore = totalScore > _loadedPlayerData.HighScore ? totalScore : _loadedPlayerData.HighScore;
+        ShowGameOverScreen(totalScore, newHighScore);
+        SaveNewData(totalScore, newHighScore);
+    }
+
+    private void ShowGameOverScreen(int totalScore, int newHighScore)
     {
         _sfxPlayer.PlaySfx(SFXLibrary.SFX_GAME_OVER);
-        int totalScore = ScoreKeeper.GetScore();
-        CanControlControllers(false);
+        _gameOverScreen.UpdateUi(totalScore, newHighScore);
         _gameOverScreen.gameObject.SetActive(true);
-        _gameOverScreen.UpdateUi(totalScore, 0);
-        //show screen here
+    }
+
+    private void SaveNewData(int totalScore, int newHighScore)
+    {
+        PlayerData updatedData = new()
+        {
+            Username = _loadedPlayerData.Username,
+            TotalScore = totalScore,
+            HighScore = newHighScore
+        };
+        DataSaver.Save(updatedData);
     }
 
     public void InvokeOnLoseEvent()

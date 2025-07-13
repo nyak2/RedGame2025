@@ -37,7 +37,7 @@ public class TimeKeeper : MonoBehaviour
 
     private void TimesUp()
     {
-        _gameManager.ShowGameOverScreen();
+        _gameManager.GameOver();
     }
 
     public void StartTimer()
