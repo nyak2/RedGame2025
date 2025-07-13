@@ -8,12 +8,15 @@ public class Capsule : MonoBehaviour
     // Components.
     private SpriteRenderer _spriteRenderer;
 
-    public bool _isLanded;
+    [HideInInspector] public bool _isLanded;
+
+    private bool _isTriggered;
 
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         Initialize(RandomCapsuleGenerator.GetRandomTier());
+        _isTriggered = false;
     }
 
     private void Initialize(Tier tier)
@@ -34,9 +37,15 @@ public class Capsule : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("Ground") || collision.gameObject.TryGetComponent<Capsule>(out var capsule))
+
+        if(collision.gameObject.CompareTag("Ground") || collision.gameObject.TryGetComponent<Capsule>(out var capsule) && !_isLanded)
         {
             _isLanded = true;
+        }
+
+        if (_isTriggered)
+        {
+            return;
         }
 
         if (!collision.gameObject.TryGetComponent<Capsule>(out var otherCapsule))
@@ -58,6 +67,43 @@ public class Capsule : MonoBehaviour
             int score = GetScore(_tier);
             Merge(this, otherCapsule, firstContact.point);
             DistributeParams(charge, score);
+            _isTriggered = true;
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+
+        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.TryGetComponent<Capsule>(out var capsule) && !_isLanded)
+        {
+            _isLanded = true;
+        }
+
+        if (_isTriggered)
+        {
+            return;
+        }
+
+        if (!collision.gameObject.TryGetComponent<Capsule>(out var otherCapsule))
+        {
+            return;
+        }
+
+        if (!_isLanded)
+        {
+            return;
+        }
+
+        ContactPoint2D firstContact = collision.GetContact(0);
+        bool isSameCapsuleType = Equals(otherCapsule);
+        if (isSameCapsuleType)
+        {
+            float charge = GetCharge(_tier);
+            int score = GetScore(_tier);
+            Merge(this, otherCapsule, firstContact.point);
+            DistributeParams(charge, score);
+            _isTriggered = true;
+
         }
     }
 
