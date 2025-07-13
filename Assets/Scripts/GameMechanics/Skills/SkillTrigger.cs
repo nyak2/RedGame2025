@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(SFXPlayer))]
 public class SkillTrigger : MonoBehaviour
 {
     private List<ISkill> _skills;

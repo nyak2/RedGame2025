@@ -9,10 +9,12 @@ public class Capsule : MonoBehaviour
     private SpriteRenderer _spriteRenderer;
 
     [HideInInspector] public bool _isLanded;
+    private SFXPlayer _sfxPlayer;
 
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        _sfxPlayer = GetComponent<SFXPlayer>();
         CapsulePooler.Pool(this);
         Initialize(RandomCapsuleGenerator.GetRandomTier());
     }
@@ -76,10 +78,10 @@ public class Capsule : MonoBehaviour
         Tier nextTier = NextTier(thisCapsule._tier);
         if (nextTier == Tier.Max)
         {
-            Debug.Log("Max tier achieved");
             return;
         }
 
+        _sfxPlayer.PlaySfx(SFXLibrary.SFX_CAPSULES_MERGE);
         Initialize(nextTier);
         CapsulePooler.Remove(otherCapsule);
         Destroy(otherCapsule.gameObject);
