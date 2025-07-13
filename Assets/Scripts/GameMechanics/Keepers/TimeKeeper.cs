@@ -6,13 +6,16 @@ public class TimeKeeper : MonoBehaviour
     [SerializeField] private float _maxTimeInSeconds;
     [SerializeField] private TextMeshProUGUI _timerTextMesh;
     [SerializeField] private DeathLine _deathLineObject;
-    [SerializeField] private float _deathLineReductionValue = 3.0f;
     [SerializeField] private GameManager _gameManager;
+    [SerializeField] private float _dropThreshold = 30.0f;
     private float _currTimeInSeconds = 0.0f;
+    private float _thresholdTimeInSeconds = 0.0f;
     private bool _isStartTimer = false;
 
     private void Start()
     {
+        _currTimeInSeconds = 0.0f;
+        _thresholdTimeInSeconds = 0.0f;
         StartTimer();
     }
 
@@ -21,6 +24,16 @@ public class TimeKeeper : MonoBehaviour
         if (!_isStartTimer)
         {
             return;
+        }
+
+        if (_thresholdTimeInSeconds < _dropThreshold)
+        {
+            _thresholdTimeInSeconds += Time.deltaTime;
+        }
+        else
+        {
+            _deathLineObject.Drop();
+            _thresholdTimeInSeconds = 0.0f;
         }
 
         if (_currTimeInSeconds < _maxTimeInSeconds)
@@ -45,7 +58,7 @@ public class TimeKeeper : MonoBehaviour
         _isStartTimer = true;
     }
 
-    private void StopTimer()
+    public void StopTimer()
     {
         _isStartTimer = false;
     }
@@ -70,13 +83,5 @@ public class TimeKeeper : MonoBehaviour
             return $"0{time}";
         }
         return time.ToString();
-    }
-
-    private void MoveDeathLineObject()
-    {
-        Vector3 _reductionTransform = new Vector3(_deathLineObject.transform.localPosition.x,
-            _deathLineObject.transform.localPosition.y - _deathLineReductionValue, _deathLineObject.transform.localPosition.z);
-
-        _deathLineObject.transform.localPosition = _reductionTransform;
     }
 }

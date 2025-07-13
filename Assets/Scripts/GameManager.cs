@@ -5,6 +5,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private DropController _dropController;
     [SerializeField] private SlideController _slideController;
     [SerializeField] private GameOverUI _gameOverScreen;
+    [SerializeField] private TimeKeeper _timeKeeper;
     private SFXPlayer _sfxPlayer;
     public delegate void OnDropped();
     public event OnDropped OnDroppedEvent;
@@ -46,6 +47,7 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         CanControlControllers(false);
+        _timeKeeper.StopTimer();
 
         int totalScore = ScoreKeeper.GetScore();
         int newHighScore = totalScore > _loadedPlayerData.HighScore ? totalScore : _loadedPlayerData.HighScore;

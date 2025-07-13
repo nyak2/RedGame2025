@@ -1,13 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class DeathLine : MonoBehaviour
 {
     [SerializeField] private GameManager _gameManager;
+    [SerializeField] private float _duration = 1.5f;
+    private Vector3 _originalPos;
+    private float _dropYPosA;
+    private float _dropYPosB;
 
     private BoxCollider2D _boxCollider;
-    // Start is called before the first frame update
+
+    private void Awake()
+    {
+        _originalPos = transform.localPosition;
+        _dropYPosA = _originalPos.y - 3.0f;
+        _dropYPosB = _dropYPosA - 2.0f;
+    }
+
     void Start()
     {
         _boxCollider = GetComponent<BoxCollider2D>();
@@ -29,6 +39,21 @@ public class DeathLine : MonoBehaviour
         if(collision.CompareTag("Capsule"))
         {
             _gameManager.InvokeOnLoseEvent();
+        }
+    }
+
+    public void Drop()
+    {
+        if (transform.localPosition.y > _dropYPosA)
+        {
+            transform.DOLocalMoveY(_dropYPosA, _duration, true).SetEase(Ease.InOutCubic);
+            return;
+        }
+
+        if (transform.localPosition.y > _dropYPosB)
+        {
+            transform.DOLocalMoveY(_dropYPosB, _duration, true).SetEase(Ease.InOutCubic);
+            return;
         }
     }
 }
