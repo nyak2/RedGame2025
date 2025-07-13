@@ -14,8 +14,8 @@ public class DeathLine : MonoBehaviour
     private void Awake()
     {
         _originalPos = transform.localPosition;
-        _dropYPosA = _originalPos.y - 3.0f;
-        _dropYPosB = _dropYPosA - 2.0f;
+        _dropYPosA = _originalPos.y - 1.5f;
+        _dropYPosB = _dropYPosA - 1.0f;
     }
 
     void Start()
@@ -46,13 +46,13 @@ public class DeathLine : MonoBehaviour
     {
         if (transform.localPosition.y > _dropYPosA)
         {
-            transform.DOLocalMoveY(_dropYPosA, _duration, true).SetEase(Ease.InOutCubic);
+            transform.DOLocalMoveY(_dropYPosA, _duration, true).SetEase(Ease.OutCubic);
             return;
         }
 
         if (transform.localPosition.y > _dropYPosB)
         {
-            transform.DOLocalMoveY(_dropYPosB, _duration, true).SetEase(Ease.InOutCubic);
+            transform.DOLocalMoveY(_dropYPosB, _duration, true).SetEase(Ease.OutCubic);
             return;
         }
     }

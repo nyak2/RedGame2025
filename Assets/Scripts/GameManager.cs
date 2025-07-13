@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -82,5 +83,15 @@ public class GameManager : MonoBehaviour
     {
         _dropController.CanControl(canControl);
         _slideController.CanControl(canControl);
+    }
+
+    public void Restart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void BackToMainMenu()
+    {
+        SceneManager.LoadScene("MainMenuScene");
     }
 }
