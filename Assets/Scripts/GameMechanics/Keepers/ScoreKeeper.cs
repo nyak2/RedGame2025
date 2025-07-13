@@ -23,4 +23,9 @@ public class ScoreKeeper : MonoBehaviour
     {
         _scoreTextMesh.text = _score.ToString();
     }
+
+    public static int GetScore()
+    {
+        return _score;
+    }
 }

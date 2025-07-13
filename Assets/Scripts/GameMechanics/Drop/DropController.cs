@@ -25,6 +25,11 @@ public class DropController : MonoBehaviour
         _currentTierNum = 0;
     }
 
+    private void OnEnable()
+    {
+        InitializeCapsule();
+    }
+
     public void InitializeCapsule()
     {
         _capsuleInstance = null;
@@ -60,6 +65,11 @@ public class DropController : MonoBehaviour
 
     private void Update()
     {
+        if (_capsuleInstance == null)
+        {
+            return;
+        }
+
         _spawnPoint = _spawnPoints[_currentTierNum].position;
 
         if (IsReleased())
@@ -69,13 +79,16 @@ public class DropController : MonoBehaviour
 
         if(_capsuleInstance._isLanded)
         {
-            _capsuleInstance.tag = "Capsule";
+            if (_capsuleInstance != null)
+            {
+                _capsuleInstance.tag = "Capsule";
+            }
             _deathLineObject.EnableLine();
             _gameManager.InvokeOnDroppedEvent();
         }
     }
 
-    public void Drop()
+    private void Drop()
     {
         _deathLineObject.DisableLine();
         _capsuleInstance.transform.parent = null;
@@ -87,19 +100,13 @@ public class DropController : MonoBehaviour
         _capsuleInstance.GetComponent<Rigidbody2D>().bodyType = type;
     }
 
-    private bool IsTouched()
-    {
-        return _touchAction.triggered;
-    }
-
     private bool IsReleased()
     {
         return _touchAction.WasReleasedThisFrame();
     }
 
-    public void DisableControls()
+    public void CanControl(bool canControl)
     {
-        enabled = false;
+        enabled = canControl;
     }
-
 }

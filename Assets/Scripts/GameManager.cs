@@ -1,22 +1,25 @@
-using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private DropController _dropController;
     [SerializeField] private SlideController _slideController;
-    [SerializeField] private GameObject _gameOverScreenObject;
+    [SerializeField] private GameOverUI _gameOverScreen;
+    private SFXPlayer _sfxPlayer;
     public delegate void OnDropped();
     public event OnDropped OnDroppedEvent;
 
     public delegate void OnLose();
     public event OnLose OnLoseEvent;
+
+    private void Awake()
+    {
+        _sfxPlayer = GetComponent<SFXPlayer>();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        _dropController.InitializeCapsule();
         OnDroppedEvent += SpawnNewCapsule;
         OnLoseEvent += ShowGameOverScreen;
     }
@@ -25,11 +28,6 @@ public class GameManager : MonoBehaviour
     {
         OnDroppedEvent -= SpawnNewCapsule;
         OnLoseEvent -= ShowGameOverScreen;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
     }
 
     void SpawnNewCapsule()
@@ -44,9 +42,11 @@ public class GameManager : MonoBehaviour
 
     public void ShowGameOverScreen()
     {
-        _dropController.DisableControls();
-        _slideController.DisableControls();
-        _gameOverScreenObject.SetActive(true);
+        _sfxPlayer.PlaySfx(SFXLibrary.SFX_GAME_OVER);
+        int totalScore = ScoreKeeper.GetScore();
+        CanControlControllers(false);
+        _gameOverScreen.gameObject.SetActive(true);
+        _gameOverScreen.UpdateUi(totalScore, 0);
         //show screen here
     }
 
@@ -55,4 +55,9 @@ public class GameManager : MonoBehaviour
         OnLoseEvent?.Invoke();
     }
 
+    public void CanControlControllers(bool canControl)
+    {
+        _dropController.CanControl(canControl);
+        _slideController.CanControl(canControl);
+    }
 }

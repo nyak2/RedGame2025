@@ -5,20 +5,16 @@ using UnityEngine.InputSystem.Controls;
 
 public class SlideController : MonoBehaviour
 {
-    [SerializeField] private float _speed = 5.0f;
     [SerializeField] private List<Transform> _limitPos;
     private InputAction _touchAction;
-    private Vector3 _referencePoint;
     private TouchControl _touchControl;
     private Camera _camera;
     private float _sliderYPos;
     private float _sliderZPos;
     private Transform _sliderTransform;
-    private bool _isEnable = false;
 
     private void Awake()
     {
-        Debug.Log("SlideController Awake");
         _sliderTransform = transform;
         _sliderYPos = _sliderTransform.position.y;
         _sliderZPos = _sliderTransform.position.z;
@@ -37,6 +33,7 @@ public class SlideController : MonoBehaviour
 
     private void OnEnable()
     {
+        _touchAction.performed += OnTouchPerformed;
         _touchAction.Enable();
         _touchControl = Touchscreen.current?.primaryTouch;
     }
@@ -47,20 +44,13 @@ public class SlideController : MonoBehaviour
         _touchAction.Disable();
     }
 
-    private void Update()
+    public void CanControl(bool canControl)
     {
-
-    }
-
-    public void DisableControls()
-    {
-        enabled = false;
+        enabled = canControl;
     }
 
     private void OnTouchPerformed(InputAction.CallbackContext context)
     {
-        Debug.Log("Touch Performed");
-
         if (_touchControl == null) _touchControl = Touchscreen.current?.primaryTouch;
         if (_touchControl == null) return;
 
@@ -69,7 +59,6 @@ public class SlideController : MonoBehaviour
         moveTo.y = _sliderYPos;
         moveTo.z = _sliderZPos;
         _sliderTransform.position = moveTo;
-        _referencePoint = touchPosition;
 
         // Clamp position if you have limits
         if (_limitPos != null && _limitPos.Count >= 2)

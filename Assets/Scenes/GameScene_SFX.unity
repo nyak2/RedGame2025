@@ -1469,6 +1469,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _capsulePrefab: {fileID: 5221495804327519960, guid: bced3d61ae7e1c8428edbfa758800e99, type: 3}
+  _gameManager: {fileID: 0}
+  _deathLineObject: {fileID: 0}
+  _spawnPoints: []
 --- !u!4 &1326504058
 Transform:
   m_ObjectHideFlags: 0
@@ -1578,6 +1581,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 8
+  _limitPos: []
 --- !u!70 &1326504062
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -1625,7 +1629,7 @@ GameObject:
   - component: {fileID: 1478081024}
   - component: {fileID: 1478081023}
   m_Layer: 5
-  m_Name: Background
+  m_Name: MainBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1794,6 +1798,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _maxTimeInSeconds: 130
   _timerTextMesh: {fileID: 328303847}
+  _deathLineObject: {fileID: 0}
+  _deathLineReductionValue: 3
+  _gameManager: {fileID: 0}
 --- !u!4 &1538347627
 Transform:
   m_ObjectHideFlags: 0
