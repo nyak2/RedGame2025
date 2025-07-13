@@ -26,7 +26,7 @@ public class SlideController : MonoBehaviour
         );
 
         _touchAction.AddBinding("<Pointer>/position");
-        _touchAction.Enable();
+        //_touchAction.Enable();
         // Add both started and performed callbacks
         _touchAction.performed += OnTouchPerformed;
 

@@ -6,14 +6,14 @@ public class CapsuleScoreBank : MonoBehaviour
 {
     private readonly static Dictionary<Tier, int> _tierToScoreDict = new()
     {
-        { Tier.One, 2 },
-        { Tier.Two, 10 },
-        { Tier.Three, 20 },
-        { Tier.Four, 32 },
-        { Tier.Five, 46 },
-        { Tier.Six, 62 },
-        { Tier.Seven, 80 },
-        { Tier.Eight, 100 }
+        { Tier.One, 3 },
+        { Tier.Two, 15 },
+        { Tier.Three, 30 },
+        { Tier.Four, 48 },
+        { Tier.Five, 69 },
+        { Tier.Six, 93 },
+        { Tier.Seven, 120 },
+        { Tier.Eight, 150 }
     };
 
     public static int GetScore(Tier tier)

@@ -16,7 +16,6 @@ public class TimeKeeper : MonoBehaviour
     {
         _currTimeInSeconds = 0.0f;
         _thresholdTimeInSeconds = 0.0f;
-        StartTimer();
     }
 
     private void Update()
