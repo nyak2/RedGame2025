@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using static CapsuleTier;
 
@@ -38,24 +39,15 @@ public class Capsule : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        bool isOtherCollisionCapsule = collision.gameObject.TryGetComponent<Capsule>(out var otherCapsule);
-        if (collision.gameObject.CompareTag("Ground") || (isOtherCollisionCapsule && !_isLanded))
-        {
-            _isLanded = true;
-        }
-
-        ContactPoint2D firstContact = collision.GetContact(0);
-        bool isSameCapsuleType = Equals(otherCapsule);
-        if (isSameCapsuleType)
-        {
-            float charge = GetCharge(_tier);
-            int score = GetScore(_tier);
-            Merge(this, otherCapsule, firstContact.point);
-            DistributeParams(charge, score);
-        }
+        OnCapsuleCollide(collision);
     }
 
     private void OnCollisionStay2D(Collision2D collision)
+    {
+        OnCapsuleCollide(collision);
+    }
+
+    private void OnCapsuleCollide(Collision2D collision)
     {
         bool isOtherCollisionCapsule = collision.gameObject.TryGetComponent<Capsule>(out var otherCapsule);
         if (collision.gameObject.CompareTag("Ground") || (isOtherCollisionCapsule && !_isLanded))
@@ -103,8 +95,19 @@ public class Capsule : MonoBehaviour
     public void Delete()
     {
         SpawnPoof();
-        gameObject.SetActive(false);
+        Disable();
+    }
+
+    private void Disable()
+    {
         CapsulePooler.Remove(this);
+        StartCoroutine(DelayedDestroy());
+    }
+
+    private IEnumerator DelayedDestroy()
+    {
+        yield return new WaitForEndOfFrame();
+        Destroy(gameObject);
     }
 
     public bool Equals(Capsule other)
