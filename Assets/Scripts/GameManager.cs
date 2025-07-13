@@ -4,7 +4,7 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private DropController _dropController;
     [SerializeField] private SlideController _slideController;
-    [SerializeField] private GameObject _gameOverScreenObject;
+    [SerializeField] private GameOverUI _gameOverScreen;
     public delegate void OnDropped();
     public event OnDropped OnDroppedEvent;
 
@@ -36,8 +36,10 @@ public class GameManager : MonoBehaviour
 
     public void ShowGameOverScreen()
     {
+        int totalScore = ScoreKeeper.GetScore();
         CanControlControllers(false);
-        _gameOverScreenObject.SetActive(true);
+        _gameOverScreen.gameObject.SetActive(true);
+        _gameOverScreen.UpdateUi(totalScore, 0);
         //show screen here
     }
 
