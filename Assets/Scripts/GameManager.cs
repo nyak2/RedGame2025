@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,6 +8,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private SlideController _slideController;
     [SerializeField] private GameOverUI _gameOverScreen;
     [SerializeField] private TimeKeeper _timeKeeper;
+    [SerializeField] private TextMeshProUGUI _timeText;
+    [SerializeField] private GameObject _cooldownScreen;
+    private float _countdownTimer = 3;
+    private bool _countdownDone;
     private SFXPlayer _sfxPlayer;
     public delegate void OnDropped();
     public event OnDropped OnDroppedEvent;
@@ -20,6 +25,11 @@ public class GameManager : MonoBehaviour
     {
         _sfxPlayer = GetComponent<SFXPlayer>();
         _loadedPlayerData = DataSaver.Load();
+        _timeText.text = _countdownTimer.ToString("F0");
+        _cooldownScreen.SetActive(true);
+        CanControlControllers(false);
+
+
     }
 
     // Start is called before the first frame update
@@ -27,6 +37,26 @@ public class GameManager : MonoBehaviour
     {
         OnDroppedEvent += SpawnNewCapsule;
         OnLoseEvent += GameOver;
+    }
+
+    private void Update()
+    {
+        if(_countdownDone)
+        {
+            return;
+        }
+
+         _countdownTimer -= Time.deltaTime;
+        _timeText.text = _countdownTimer.ToString("F0");
+
+        if(_countdownTimer <= 0)
+        {
+            _countdownDone = true;
+            _cooldownScreen.SetActive(false);
+            CanControlControllers(true);
+            _timeKeeper.StartTimer();
+        }
+        
     }
 
     private void OnDestroy()
@@ -94,4 +124,5 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene("MainMenuScene");
     }
+
 }
