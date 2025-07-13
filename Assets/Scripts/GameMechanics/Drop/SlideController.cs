@@ -1,70 +1,82 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 
 public class SlideController : MonoBehaviour
 {
-    private Rigidbody2D _slider;
     [SerializeField] private float _speed = 5.0f;
+    [SerializeField] private List<Transform> _limitPos;
     private InputAction _touchAction;
     private Vector3 _referencePoint;
     private TouchControl _touchControl;
     private Camera _camera;
     private float _sliderYPos;
     private float _sliderZPos;
+    private Transform _sliderTransform;
+    private bool _isEnable = false;
 
     private void Awake()
     {
-        _slider = GetComponent<Rigidbody2D>();
-        _sliderYPos = _slider.gameObject.transform.position.y;
-        _sliderZPos = _slider.gameObject.transform.position.z;
+        Debug.Log("SlideController Awake");
+        _sliderTransform = transform;
+        _sliderYPos = _sliderTransform.position.y;
+        _sliderZPos = _sliderTransform.position.z;
 
         _touchAction = new InputAction(
-            type: InputActionType.PassThrough,
-            binding: "<Touchscreen>/touch*/press"
-            );
+            type: InputActionType.Value,
+            binding: "<Touchscreen>/touch*/position"
+        );
         _touchAction.AddBinding("<Pointer>/press");
         _touchAction.Enable();
-        _touchAction.started += OnTouchStarted;
-        _touchControl = Touchscreen.current.primaryTouch;
+        // Add both started and performed callbacks
+        _touchAction.performed += OnTouchPerformed;
+
         _camera = Camera.main;
+    }
+
+    private void OnEnable()
+    {
+        _touchAction.Enable();
+        _touchControl = Touchscreen.current?.primaryTouch;
+    }
+
+    private void OnDisable()
+    {
+        _touchAction.performed -= OnTouchPerformed;
+        _touchAction.Disable();
     }
 
     private void Update()
     {
-        if (!_touchControl.IsActuated())
-        {
-            return;
-        }
 
-        Vector2 currTouchPosition = _touchControl.position.ReadValue();
-        int swipeMagnitude = GetSwipeMagnitude(currTouchPosition, _referencePoint);
-        Vector3 moveDirection = new(swipeMagnitude * _speed, 0.0f, 0.0f);
-        _slider.velocity = moveDirection;
-        _referencePoint = currTouchPosition;
     }
 
-    private int GetSwipeMagnitude(Vector2 currTouchPos, Vector2 referencePos)
+    public void DisableControls()
     {
-        float xDiff = currTouchPos.x - referencePos.x;
-        if (xDiff > 0)
-        {
-            return 1;
-        }
-        else if (xDiff < 0)
-        {
-            return -1;
-        }
-        return 0;
+        enabled = false;
     }
 
-    private void OnTouchStarted(InputAction.CallbackContext context)
+    private void OnTouchPerformed(InputAction.CallbackContext context)
     {
+        Debug.Log("Touch Performed");
+
+        if (_touchControl == null) _touchControl = Touchscreen.current?.primaryTouch;
+        if (_touchControl == null) return;
+
         Vector2 touchPosition = _touchControl.position.ReadValue();
-        Vector3 moveTo = _camera.ScreenToWorldPoint(new(touchPosition.x, 0.0f, 0.0f));
+        Vector3 moveTo = _camera.ScreenToWorldPoint(new Vector3(touchPosition.x, _sliderYPos, _camera.nearClipPlane));
         moveTo.y = _sliderYPos;
         moveTo.z = _sliderZPos;
-        _slider.gameObject.transform.position = moveTo;
+        _sliderTransform.position = moveTo;
         _referencePoint = touchPosition;
+
+        // Clamp position if you have limits
+        if (_limitPos != null && _limitPos.Count >= 2)
+        {
+            Vector3 clampedPosition = _sliderTransform.position;
+            clampedPosition.x = Mathf.Clamp(clampedPosition.x, _limitPos[0].position.x, _limitPos[1].position.x);
+            _sliderTransform.position = clampedPosition;
+        }
     }
 }

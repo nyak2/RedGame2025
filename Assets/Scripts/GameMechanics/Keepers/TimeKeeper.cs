@@ -5,6 +5,9 @@ public class TimeKeeper : MonoBehaviour
 {
     [SerializeField] private float _maxTimeInSeconds;
     [SerializeField] private TextMeshProUGUI _timerTextMesh;
+    [SerializeField] private DeathLine _deathLineObject;
+    [SerializeField] private float _deathLineReductionValue = 3.0f;
+    [SerializeField] private GameManager _gameManager;
     private float _currTimeInSeconds = 0.0f;
     private bool _isStartTimer = false;
 
@@ -34,7 +37,7 @@ public class TimeKeeper : MonoBehaviour
 
     private void TimesUp()
     {
-
+        _gameManager.ShowGameOverScreen();
     }
 
     public void StartTimer()
@@ -67,5 +70,13 @@ public class TimeKeeper : MonoBehaviour
             return $"0{time}";
         }
         return time.ToString();
+    }
+
+    private void MoveDeathLineObject()
+    {
+        Vector3 _reductionTransform = new Vector3(_deathLineObject.transform.localPosition.x,
+            _deathLineObject.transform.localPosition.y - _deathLineReductionValue, _deathLineObject.transform.localPosition.z);
+
+        _deathLineObject.transform.localPosition = _reductionTransform;
     }
 }
