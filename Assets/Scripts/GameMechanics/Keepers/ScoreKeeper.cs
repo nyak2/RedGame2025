@@ -10,6 +10,7 @@ public class ScoreKeeper : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        _score = 0;
         UpdateScoreUi();
     }
 
