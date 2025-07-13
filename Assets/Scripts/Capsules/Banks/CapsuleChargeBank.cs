@@ -6,8 +6,8 @@ public class CapsuleChargeBank : MonoBehaviour
 {
     private static Dictionary<Tier, float> _tierToChargeDict = new()
     {
-        { Tier.One, 1.0f },
-        { Tier.Two, 2.0f },
+        { Tier.One, 15.0f },
+        { Tier.Two, 15.0f },
         { Tier.Three, 5.0f },
         { Tier.Four, 10.0f },
         { Tier.Five, 15.0f },

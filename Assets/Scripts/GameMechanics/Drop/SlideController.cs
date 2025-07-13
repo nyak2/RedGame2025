@@ -47,14 +47,9 @@ public class SlideController : MonoBehaviour
         _touchAction.Disable();
     }
 
-    private void Update()
+    public void CanControl(bool canControl)
     {
-
-    }
-
-    public void DisableControls()
-    {
-        enabled = false;
+        enabled = canControl;
     }
 
     private void OnTouchPerformed(InputAction.CallbackContext context)

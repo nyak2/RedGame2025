@@ -69,7 +69,10 @@ public class DropController : MonoBehaviour
 
         if(_capsuleInstance._isLanded)
         {
-            _capsuleInstance.tag = "Capsule";
+            if (_capsuleInstance != null)
+            {
+                _capsuleInstance.tag = "Capsule";
+            }
             _deathLineObject.EnableLine();
             _gameManager.InvokeOnDroppedEvent();
         }
@@ -87,19 +90,13 @@ public class DropController : MonoBehaviour
         _capsuleInstance.GetComponent<Rigidbody2D>().bodyType = type;
     }
 
-    private bool IsTouched()
-    {
-        return _touchAction.triggered;
-    }
-
     private bool IsReleased()
     {
         return _touchAction.WasReleasedThisFrame();
     }
 
-    public void DisableControls()
+    public void CanControl(bool canControl)
     {
-        enabled = false;
+        enabled = canControl;
     }
-
 }

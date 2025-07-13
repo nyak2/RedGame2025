@@ -6,6 +6,7 @@ public class ChargeKeeper : MonoBehaviour
     private static float _charge = 0.0f;
     private static readonly float _maxCharge = 100.0f;
     [SerializeField] private Slider _chargeSlider;
+    [SerializeField] private SkillTrigger _skillTrigger;
     public static ChargeKeeper Instance;
 
     private void Awake()
@@ -17,11 +18,12 @@ public class ChargeKeeper : MonoBehaviour
     public void AddCharge(float charge)
     {
         _charge += charge;
-        UpdateChargeUi();
         if (_charge >= _maxCharge)
         {
-            
+            _skillTrigger.TriggerRandomSkill();
+            _charge = 0.0f;
         }
+        UpdateChargeUi();
     }
 
     private void UpdateChargeUi()

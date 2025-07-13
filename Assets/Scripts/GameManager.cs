@@ -1,6 +1,3 @@
-using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -13,6 +10,7 @@ public class GameManager : MonoBehaviour
 
     public delegate void OnLose();
     public event OnLose OnLoseEvent;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,11 +25,6 @@ public class GameManager : MonoBehaviour
         OnLoseEvent -= ShowGameOverScreen;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
     void SpawnNewCapsule()
     {
         _dropController.InitializeCapsule();
@@ -44,8 +37,7 @@ public class GameManager : MonoBehaviour
 
     public void ShowGameOverScreen()
     {
-        _dropController.DisableControls();
-        _slideController.DisableControls();
+        CanControlControllers(false);
         _gameOverScreenObject.SetActive(true);
         //show screen here
     }
@@ -55,4 +47,9 @@ public class GameManager : MonoBehaviour
         OnLoseEvent?.Invoke();
     }
 
+    public void CanControlControllers(bool canControl)
+    {
+        _dropController.CanControl(canControl);
+        _slideController.CanControl(canControl);
+    }
 }

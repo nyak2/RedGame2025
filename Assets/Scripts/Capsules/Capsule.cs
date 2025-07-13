@@ -15,6 +15,7 @@ public class Capsule : MonoBehaviour
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        CapsulePooler.Pool(this);
         Initialize(RandomCapsuleGenerator.GetRandomTier());
         _isTriggered = false;
     }
@@ -116,6 +117,7 @@ public class Capsule : MonoBehaviour
         }
 
         Initialize(nextTier);
+        CapsulePooler.Remove(otherCapsule);
         Destroy(otherCapsule.gameObject);
         transform.position = contactPoint;
     }
