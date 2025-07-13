@@ -7,7 +7,8 @@ public class SlideController : MonoBehaviour
 {
     [SerializeField] private List<Transform> _limitPos;
     private InputAction _touchAction;
-    private TouchControl _touchControl;
+    //private TouchControl _touchControl;
+    private Vector2 _touchPos;
     private Camera _camera;
     private float _sliderYPos;
     private float _sliderZPos;
@@ -23,7 +24,7 @@ public class SlideController : MonoBehaviour
             type: InputActionType.Value,
             binding: "<Touchscreen>/touch*/position"
         );
-        _touchAction.AddBinding("<Pointer>/press");
+
         _touchAction.AddBinding("<Pointer>/position");
         _touchAction.Enable();
         // Add both started and performed callbacks
@@ -36,7 +37,6 @@ public class SlideController : MonoBehaviour
     {
         _touchAction.performed += OnTouchPerformed;
         _touchAction.Enable();
-        _touchControl = Touchscreen.current?.primaryTouch;
     }
 
     private void OnDisable()
@@ -52,10 +52,9 @@ public class SlideController : MonoBehaviour
 
     private void OnTouchPerformed(InputAction.CallbackContext context)
     {
-        if (_touchControl == null) _touchControl = Touchscreen.current?.primaryTouch;
-        if (_touchControl == null) return;
+        _touchPos = _touchAction.ReadValue<Vector2>();
 
-        Vector2 touchPosition = _touchControl.position.ReadValue();
+        Vector2 touchPosition = _touchPos;
         Vector3 moveTo = _camera.ScreenToWorldPoint(new Vector3(touchPosition.x, _sliderYPos, _camera.nearClipPlane));
         moveTo.y = _sliderYPos;
         moveTo.z = _sliderZPos;
