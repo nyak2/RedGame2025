@@ -10,14 +10,11 @@ public class Capsule : MonoBehaviour
 
     [HideInInspector] public bool _isLanded;
 
-    private bool _isTriggered;
-
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         CapsulePooler.Pool(this);
         Initialize(RandomCapsuleGenerator.GetRandomTier());
-        _isTriggered = false;
     }
 
     private void Initialize(Tier tier)
@@ -38,26 +35,10 @@ public class Capsule : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-
-        if(collision.gameObject.CompareTag("Ground") || collision.gameObject.TryGetComponent<Capsule>(out var capsule) && !_isLanded)
+        bool isOtherCollisionCapsule = collision.gameObject.TryGetComponent<Capsule>(out var otherCapsule);
+        if (collision.gameObject.CompareTag("Ground") || (isOtherCollisionCapsule && !_isLanded))
         {
             _isLanded = true;
-        }
-
-        if (_isTriggered)
-        {
-            return;
-        }
-
-        if (!collision.gameObject.TryGetComponent<Capsule>(out var otherCapsule))
-        {
-            return;
-        }
-
-
-        if(!_isLanded)
-        {
-            return;
         }
 
         ContactPoint2D firstContact = collision.GetContact(0);
@@ -68,31 +49,15 @@ public class Capsule : MonoBehaviour
             int score = GetScore(_tier);
             Merge(this, otherCapsule, firstContact.point);
             DistributeParams(charge, score);
-            _isTriggered = true;
         }
     }
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-
-        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.TryGetComponent<Capsule>(out var capsule) && !_isLanded)
+        bool isOtherCollisionCapsule = collision.gameObject.TryGetComponent<Capsule>(out var otherCapsule);
+        if (collision.gameObject.CompareTag("Ground") || (isOtherCollisionCapsule && !_isLanded))
         {
             _isLanded = true;
-        }
-
-        if (_isTriggered)
-        {
-            return;
-        }
-
-        if (!collision.gameObject.TryGetComponent<Capsule>(out var otherCapsule))
-        {
-            return;
-        }
-
-        if (!_isLanded)
-        {
-            return;
         }
 
         ContactPoint2D firstContact = collision.GetContact(0);
@@ -103,8 +68,6 @@ public class Capsule : MonoBehaviour
             int score = GetScore(_tier);
             Merge(this, otherCapsule, firstContact.point);
             DistributeParams(charge, score);
-            _isTriggered = true;
-
         }
     }
 
@@ -113,6 +76,7 @@ public class Capsule : MonoBehaviour
         Tier nextTier = NextTier(thisCapsule._tier);
         if (nextTier == Tier.Max)
         {
+            Debug.Log("Max tier achieved");
             return;
         }
 

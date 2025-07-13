@@ -25,6 +25,11 @@ public class DropController : MonoBehaviour
         _currentTierNum = 0;
     }
 
+    private void OnEnable()
+    {
+        InitializeCapsule();
+    }
+
     public void InitializeCapsule()
     {
         _capsuleInstance = null;
@@ -60,6 +65,11 @@ public class DropController : MonoBehaviour
 
     private void Update()
     {
+        if (_capsuleInstance == null)
+        {
+            return;
+        }
+
         _spawnPoint = _spawnPoints[_currentTierNum].position;
 
         if (IsReleased())
@@ -78,7 +88,7 @@ public class DropController : MonoBehaviour
         }
     }
 
-    public void Drop()
+    private void Drop()
     {
         _deathLineObject.DisableLine();
         _capsuleInstance.transform.parent = null;
