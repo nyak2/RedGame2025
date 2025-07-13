@@ -19,10 +19,10 @@ public class ExplosionSkill : MonoBehaviour, ISkill
     private void Explode()
     {
         List<Capsule> randomCapsules = CapsulePooler.GetRandom(_explodeAmount);
+        _sfxPlayer.PlaySfx(SFXLibrary.SFX_EXPLOSION_POP);
         foreach (Capsule capsule in randomCapsules)
         {
-            _sfxPlayer.PlaySfx(SFXLibrary.SFX_EXPLOSION_POP);
-            capsule.Delete();
+            capsule.Delete(2);
         }
     }
 }

@@ -10,7 +10,7 @@ public class Capsule : MonoBehaviour
     private SpriteRenderer _spriteRenderer;
     [SerializeField] private PoofAnimation _poof;
 
-    [HideInInspector] public bool _isLanded;
+    [HideInInspector] private bool _isLanded = false;
     private SFXPlayer _sfxPlayer;
 
     private void Awake()
@@ -92,6 +92,12 @@ public class Capsule : MonoBehaviour
         Instantiate(_poof, transform.position, Quaternion.identity);
     }
 
+    public void Delete(int multiplier)
+    {
+        DistributeParams(GetCharge(_tier) * multiplier, GetScore(_tier) * multiplier);
+        Delete();
+    }
+
     public void Delete()
     {
         SpawnPoof();
@@ -108,6 +114,11 @@ public class Capsule : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
         Destroy(gameObject);
+    }
+
+    public bool IsLanded()
+    {
+        return _isLanded;
     }
 
     public bool Equals(Capsule other)
