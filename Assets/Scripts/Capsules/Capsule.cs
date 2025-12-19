@@ -93,9 +93,12 @@ public class Capsule : MonoBehaviour
         Instantiate(_poof, transform.position, Quaternion.identity);
     }
 
-    public void Delete(int multiplier)
+    public void Delete(int multiplier, bool shouldGrantCharge = true)
     {
-        DistributeParams(GetCharge(_tier) * multiplier, GetScore(_tier) * multiplier);
+        if (shouldGrantCharge)
+        {
+            DistributeParams(GetCharge(_tier) * multiplier, GetScore(_tier) * multiplier);
+        }
         Delete();
     }
 

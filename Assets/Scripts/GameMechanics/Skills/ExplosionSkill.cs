@@ -20,9 +20,11 @@ public class ExplosionSkill : MonoBehaviour, ISkill
     {
         List<Capsule> randomCapsules = CapsulePooler.GetRandom(_explodeAmount);
         _sfxPlayer.PlaySfx(SFXLibrary.SFX_EXPLOSION_POP);
+        int pointsMultiplier = 2;
+        bool shouldGrantCharge = false;
         foreach (Capsule capsule in randomCapsules)
         {
-            capsule.Delete(2);
+            capsule.Delete(pointsMultiplier, shouldGrantCharge);
         }
     }
 }
