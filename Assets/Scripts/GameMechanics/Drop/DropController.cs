@@ -52,7 +52,6 @@ public class DropController : MonoBehaviour
     {
         if (_currentCapsule != null)
         {
-            Debug.Log("Current capsule already exists. Cannot initialize a new one.");
             return;
         }
 
@@ -89,11 +88,10 @@ public class DropController : MonoBehaviour
     {
         if (capsule == null)
         {
-            Debug.Log("Capsule is null in OnCapsuleLanded");  
             return;
         }
 
-        Debug.Log("Capsule has landed.");
+        // Clean up
         capsule.OnLanded -= OnCapsuleLanded;
         _currentCapsule = null;
         _hasDroppedCurrent = false;

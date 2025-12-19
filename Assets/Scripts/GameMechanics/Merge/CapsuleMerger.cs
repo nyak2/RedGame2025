@@ -12,18 +12,15 @@ public static class CapsuleMerger
 
         if (firstCapsule == null || secondCapsule == null)
         {
-            Debug.Log("One of the capsules is null. Aborting merge.");
             return;
         }
 
         if (_processingMergeRequests.Contains(mergeRequest))
         {
-            Debug.Log("Merge already in process for these capsules.");
             return;
         }
 
         _processingMergeRequests.Add(mergeRequest);
-        Debug.Log($"Processing merge request. {_processingMergeRequests}");
         CapsuleTier.Tier nextTier = CapsuleTier.NextTier(mergeRequest.CurrentCapsuleTier);
         float charge = CapsuleTier.GetCharge(mergeRequest.CurrentCapsuleTier);
         int score = CapsuleTier.GetScore(mergeRequest.CurrentCapsuleTier);

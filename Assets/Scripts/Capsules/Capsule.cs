@@ -62,7 +62,6 @@ public class Capsule : MonoBehaviour
         bool isOtherCollisionCapsule = collision.gameObject.TryGetComponent<Capsule>(out var otherCapsule);
         if (!_isLanded && (collision.gameObject.CompareTag("Ground") || isOtherCollisionCapsule))
         {
-            Debug.Log($"Capsule of tier {_tier} landed.");
             _isLanded = true;
             gameObject.tag = "Capsule";
             OnLanded?.Invoke(this);
@@ -100,7 +99,6 @@ public class Capsule : MonoBehaviour
 
     private void DistributeParams(float charge, int score)
     {
-        Debug.Log($"Distributing charge: {charge}, score: {score}");
         ChargeKeeper.Instance.AddCharge(charge);
         ScoreKeeper.Instance.AddScore(score);
     }
