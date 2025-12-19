@@ -29,12 +29,6 @@ public class GameManager : MonoBehaviour
         _cooldownScreen.SetActive(true);
         CanControlControllers(false);
 
-
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
         OnDroppedEvent += SpawnNewCapsule;
         OnLoseEvent += GameOver;
     }

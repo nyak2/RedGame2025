@@ -10,8 +10,8 @@ public class DropController : MonoBehaviour
     private InputAction _touchAction;
     [SerializeField] private List<Transform> _spawnPoints;
     private Vector3 _spawnPoint;
-    private Capsule _capsuleInstance;
-    private int _currentTierNum;
+    private Capsule _currentCapsule;
+    private bool _hasDroppedCurrent = false;
 
     private void Awake()
     {
@@ -20,89 +20,107 @@ public class DropController : MonoBehaviour
             binding: "<Touchscreen>/touch*/press"
             );
         _touchAction.AddBinding("<Pointer>/press");
-        _touchAction.Enable();
         _spawnPoint = _spawnPoints[0].position;
-        _currentTierNum = 0;
     }
 
     private void OnEnable()
     {
+        _touchAction.performed += OnTouchPerformed;
+        _touchAction.Enable();
+
         InitializeCapsule();
+    }
+
+    private void OnDisable()
+    {
+        _touchAction.performed -= OnTouchPerformed;
+        _touchAction.Disable();
+    }
+
+    private void OnTouchPerformed(InputAction.CallbackContext context)
+    {
+        if (_hasDroppedCurrent)
+        {
+            return;
+        }
+
+        _hasDroppedCurrent = true;
+        Drop(_currentCapsule);
     }
 
     public void InitializeCapsule()
     {
-        _capsuleInstance = null;
-        Capsule capsuleInstance = Instantiate(_capsulePrefab, transform);
-        _capsuleInstance = capsuleInstance;
-        ChangeCapsuleRbTo(RigidbodyType2D.Static);
+        if (_currentCapsule != null)
+        {
+            Debug.Log("Current capsule already exists. Cannot initialize a new one.");
+            return;
+        }
 
-        switch (_capsuleInstance.GetTier())
+        Capsule capsuleInstance = Instantiate(_capsulePrefab, transform);
+        _currentCapsule = capsuleInstance;
+        capsuleInstance.OnLanded += OnCapsuleLanded;
+        ChangeCapsuleRbTo(capsuleInstance, RigidbodyType2D.Static);
+
+        switch (capsuleInstance.GetTier())
         {
             case CapsuleTier.Tier.One:
                 {
                     _spawnPoint = _spawnPoints[0].position;
-                    _currentTierNum = 0;
                 }
                 break;
 
             case CapsuleTier.Tier.Two:
                 {
                     _spawnPoint = _spawnPoints[1].position;
-                    _currentTierNum = 1;
                 }
                 break;
 
             case CapsuleTier.Tier.Three:
                 {
                     _spawnPoint = _spawnPoints[2].position;
-                    _currentTierNum = 2;
                 }
                 break;
         }
+
         capsuleInstance.transform.position = _spawnPoint;
     }
 
-    private void Update()
+    private void OnCapsuleLanded(Capsule capsule)
     {
-        if (_capsuleInstance == null)
+        if (capsule == null)
+        {
+            Debug.Log("Capsule is null in OnCapsuleLanded");  
+            return;
+        }
+
+        Debug.Log("Capsule has landed.");
+        capsule.OnLanded -= OnCapsuleLanded;
+        _currentCapsule = null;
+        _hasDroppedCurrent = false;
+
+        _deathLineObject.EnableLine();
+        _gameManager.InvokeOnDroppedEvent();
+    }
+
+    private void Drop(Capsule capsule)
+    {
+        if (capsule == null)
         {
             return;
         }
 
-        _spawnPoint = _spawnPoints[_currentTierNum].position;
-
-        if (IsReleased())
-        {
-            Drop();
-        }
-
-        if(_capsuleInstance.IsLanded)
-        {
-            if (_capsuleInstance != null)
-            {
-                _capsuleInstance.tag = "Capsule";
-            }
-            _deathLineObject.EnableLine();
-            _gameManager.InvokeOnDroppedEvent();
-        }
-    }
-
-    private void Drop()
-    {
         _deathLineObject.DisableLine();
-        _capsuleInstance.transform.parent = null;
-        ChangeCapsuleRbTo(RigidbodyType2D.Dynamic);
+        capsule.transform.parent = null;
+        ChangeCapsuleRbTo(capsule, RigidbodyType2D.Dynamic);
     }
 
-    private void ChangeCapsuleRbTo(RigidbodyType2D type)
+    private void ChangeCapsuleRbTo(Capsule capsule, RigidbodyType2D type)
     {
-        _capsuleInstance.GetComponent<Rigidbody2D>().bodyType = type;
-    }
-
-    private bool IsReleased()
-    {
-        return _touchAction.WasReleasedThisFrame();
+        if (!capsule.TryGetComponent<Rigidbody2D>(out var rb))
+        {
+            return;
+        }
+        rb.bodyType = type;
     }
 
     public void CanControl(bool canControl)

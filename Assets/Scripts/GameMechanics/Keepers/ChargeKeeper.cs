@@ -30,6 +30,7 @@ public class ChargeKeeper : MonoBehaviour
             new(100.0f, biggieChargeIcons["Biggie_ChargeIcon_4"]),
         };
 
+        _charge = 0.0f;
         UpdateChargeUi();
     }
 

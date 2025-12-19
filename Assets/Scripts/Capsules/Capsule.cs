@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using static CapsuleTier;
@@ -12,6 +13,8 @@ public class Capsule : MonoBehaviour
 
     [HideInInspector] private bool _isLanded = false;
     public bool IsLanded => _isLanded;
+    public event Action<Capsule> OnLanded;
+
     private SFXPlayer _sfxPlayer;
 
     private void Awake()
@@ -33,6 +36,12 @@ public class Capsule : MonoBehaviour
         tag = "Untagged";
     }
 
+    public void Reinitialize(Tier tier)
+    {
+        SpawnPoof();
+        Initialize(tier);
+    }
+
     public Tier GetTier()
     {
         return _tier;
@@ -51,19 +60,19 @@ public class Capsule : MonoBehaviour
     private void OnCapsuleCollide(Collision2D collision)
     {
         bool isOtherCollisionCapsule = collision.gameObject.TryGetComponent<Capsule>(out var otherCapsule);
-        if (collision.gameObject.CompareTag("Ground") || (isOtherCollisionCapsule && !_isLanded))
+        if (!_isLanded && (collision.gameObject.CompareTag("Ground") || isOtherCollisionCapsule))
         {
+            Debug.Log($"Capsule of tier {_tier} landed.");
             _isLanded = true;
+            gameObject.tag = "Capsule";
+            OnLanded?.Invoke(this);
         }
 
         ContactPoint2D firstContact = collision.GetContact(0);
         bool isSameCapsuleType = Equals(otherCapsule);
         if (isSameCapsuleType)
         {
-            float charge = GetCharge(_tier);
-            int score = GetScore(_tier);
             Merge(this, otherCapsule, firstContact.point);
-            DistributeParams(charge, score);
         }
     }
 
@@ -76,14 +85,22 @@ public class Capsule : MonoBehaviour
         }
 
         _sfxPlayer.PlaySfx(SFXLibrary.SFX_CAPSULES_MERGE);
-        otherCapsule.Delete();
-        SpawnPoof();
-        Initialize(nextTier);
-        transform.position = contactPoint;
+        MergeRequest mergeRequest = new(thisCapsule, otherCapsule, contactPoint);
+        CapsuleMerger.Merge(mergeRequest);
+    }
+
+    public void UpgradeToTier(Tier tier)
+    {
+        if (tier == Tier.Max)
+        {
+            return;
+        }
+        Reinitialize(tier);
     }
 
     private void DistributeParams(float charge, int score)
     {
+        Debug.Log($"Distributing charge: {charge}, score: {score}");
         ChargeKeeper.Instance.AddCharge(charge);
         ScoreKeeper.Instance.AddScore(score);
     }
@@ -93,12 +110,9 @@ public class Capsule : MonoBehaviour
         Instantiate(_poof, transform.position, Quaternion.identity);
     }
 
-    public void Delete(int multiplier, bool shouldGrantCharge = true)
+    public void Delete(int chargeMultipler, int scoreMultiplier)
     {
-        if (shouldGrantCharge)
-        {
-            DistributeParams(GetCharge(_tier) * multiplier, GetScore(_tier) * multiplier);
-        }
+        DistributeParams(GetCharge(_tier) * chargeMultipler, GetScore(_tier) * scoreMultiplier);  
         Delete();
     }
 
@@ -111,7 +125,7 @@ public class Capsule : MonoBehaviour
     private void Disable()
     {
         CapsulePooler.Remove(this);
-        StartCoroutine(DelayedDestroy());
+        Destroy(gameObject);
     }
 
     private IEnumerator DelayedDestroy()
