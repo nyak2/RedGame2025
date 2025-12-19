@@ -36,13 +36,13 @@ public class ChargeKeeper : MonoBehaviour
     public void AddCharge(float charge)
     {
         _charge += charge;
-        UpdateChargeUi();
 
         if (_charge >= _maxCharge)
         {
             _skillTrigger.TriggerRandomSkill();
             _charge = 0.0f;
         }
+        UpdateChargeUi();
     }
 
     private void UpdateChargeUi()
