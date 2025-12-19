@@ -17,7 +17,7 @@ public class CapsulePooler : MonoBehaviour
 
     public static List<Capsule> GetRandom(int count)
     {
-        List<Capsule> validCapsules = _capsules.FindAll(capsule => capsule._isLanded);
+        List<Capsule> validCapsules = _capsules.FindAll(capsule => capsule.IsLanded);
         List<Capsule> resultCapsules = new();
 
         if (validCapsules.Count == 0)

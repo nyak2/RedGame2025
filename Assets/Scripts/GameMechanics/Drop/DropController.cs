@@ -77,7 +77,7 @@ public class DropController : MonoBehaviour
             Drop();
         }
 
-        if(_capsuleInstance._isLanded)
+        if(_capsuleInstance.IsLanded)
         {
             if (_capsuleInstance != null)
             {

@@ -11,6 +11,7 @@ public class Capsule : MonoBehaviour
     [SerializeField] private PoofAnimation _poof;
 
     [HideInInspector] private bool _isLanded = false;
+    public bool IsLanded => _isLanded;
     private SFXPlayer _sfxPlayer;
 
     private void Awake()
@@ -114,11 +115,6 @@ public class Capsule : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
         Destroy(gameObject);
-    }
-
-    public bool IsLanded()
-    {
-        return _isLanded;
     }
 
     public bool Equals(Capsule other)
